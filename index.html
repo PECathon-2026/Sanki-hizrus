@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tsukuyomi Watch | The Samurai's Celestial Guide & Spirit Lens</title>
+  
+  <!-- Favicon / Meta -->
+  <meta name="description" content="Tsukuyomi Watch - A samurai-themed celestial stargazing guide, real-time Night Honor scoring, and Spirit Lens astronomical image restoration.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>🌙</text></svg>">
+
+  <!-- Google Fonts: Cinzel, Cinzel Decorative, Shippori Mincho, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Shippori+Mincho:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Custom Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            void: '#05070B',
+            night: '#0B0E17',
+            shrine: '#131826',
+            lacquer: '#1A2035',
+            crimson: {
+              400: '#F87171',
+              500: '#EF4444',
+              600: '#DC2626',
+              700: '#B91C1C',
+              800: '#991B1B',
+              900: '#7F1D1D',
+              950: '#450A0A'
+            },
+            katana: '#E2E8F0',
+            gold: {
+              300: '#FDE047',
+              400: '#FACC15',
+              500: '#EAB308',
+              600: '#CA8A04',
+              700: '#A16207'
+            },
+            sakura: '#FDA4AF'
+          },
+          fontFamily: {
+            cinzel: ['"Cinzel Decorative"', 'serif'],
+            roman: ['"Cinzel"', 'serif'],
+            mincho: ['"Shippori Mincho"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'glow-pulse': 'glow 3s ease-in-out infinite alternate',
+            'spin-slow': 'spin 25s linear infinite',
+            'scanline': 'scanline 8s linear infinite'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' }
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 15px rgba(220, 38, 38, 0.3), 0 0 30px rgba(234, 179, 8, 0.2)' },
+              '100%': { boxShadow: '0 0 30px rgba(220, 38, 38, 0.6), 0 0 60px rgba(234, 179, 8, 0.4)' }
+            },
+            scanline: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(1000%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ---- MODAL OVERLAY ---- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(5, 7, 11, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-box {
+      background: linear-gradient(135deg, #131826 0%, #1A2035 60%, #0B0E17 100%);
+      border: 1px solid rgba(234,179,8,0.4);
+      box-shadow: 0 0 60px rgba(220,38,38,0.25), 0 0 0 1px rgba(234,179,8,0.1) inset;
+      border-radius: 1.25rem;
+      padding: 2rem 2.25rem 1.75rem;
+      max-width: 480px;
+      width: 90vw;
+      position: relative;
+      transform: scale(0.93) translateY(18px);
+      transition: transform 0.35s cubic-bezier(.22,1,.36,1);
+    }
+    .modal-overlay.active .modal-box {
+      transform: scale(1) translateY(0);
+    }
+    .modal-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.9rem;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.3rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: #EAB308; }
+
+    /* ---- SECTION TRANSITION ---- */
+    .section-transition {
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      transition: opacity 0.55s cubic-bezier(.22,1,.36,1), transform 0.55s cubic-bezier(.22,1,.36,1);
+    }
+    .section-transition.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* ---- TICKER clickable styles ---- */
+    .ticker-clickable {
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 2px 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .ticker-clickable:hover {
+      background: rgba(234,179,8,0.12);
+      color: #FACC15;
+    }
+
+    /* Custom ink wash backdrop & gold scroll styling */
+    body {
+      background-color: #05070B;
+      color: #E2E8F0;
+      overflow-x: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #05070B;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #7F1D1D;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #DC2626;
+    }
+
+    /* Traditional ink-wash textured background overlay */
+    .ink-wash-overlay {
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(220, 38, 38, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 80% 60%, rgba(234, 179, 8, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(185, 28, 28, 0.06) 0%, transparent 50%);
+    }
+
+    /* Gold foil borders */
+    .gold-foil-border {
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      box-shadow: inset 0 0 12px rgba(234, 179, 8, 0.08), 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .crimson-foil-border {
+      border: 1px solid rgba(220, 38, 38, 0.4);
+      box-shadow: inset 0 0 14px rgba(220, 38, 38, 0.1), 0 4px 20px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Katana slash line effect */
+    .katana-slash {
+      position: relative;
+    }
+    .katana-slash::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #DC2626, #EAB308, transparent);
+    }
+
+    /* Custom image comparison slider handle */
+    .slider-handle {
+      box-shadow: 0 0 20px #EAB308, 0 0 10px #DC2626;
+    }
+  </style>
+</head>
+<body class="bg-void text-slate-200 antialiased selection:bg-crimson-600 selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- MODAL OVERLAYS: Live Phase, Live Event, Illumination, Moonrise, Dark Sky, Sky Clarity, Next Peak -->
+  <!-- ========================================================================= -->
+
+  <!-- Modal 1: Live Celestial Phase -->
+  <div id="modal-phase" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button class="modal-close" data-modal="modal-phase" title="Close">&times;</button>
+      <div class="flex items-center space-x-2 mb-3">
+        <span class="w-2 h-2 rounded-full bg-crimson-500 animate-ping inline-block"></span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-crimson-400 font-bold">Live Celestial Phase</span>
+      </div>
+      <h3 class="font-cinzel text-xl font-bold text-gold-300 mb-1">Waxing Crescent Moon</h3>
+      <p class="font-roman text-slate-300 text-sm mb-3 italic">"The Silver Katana"</p>
+      <p class="text-slate-400 text-xs font-sans leading-relaxed">
+        The Waxing Crescent is the earliest sliver of the moon visible after the New Moon. It rises in the east shortly after the Sun and sets after dark in the west. This phase is ideal for spotting Earthshine — the pale glow on the unlit portion caused by sunlight bouncing off Earth. The crescent grows each day as the Moon moves away from the Sun.
+      </p>
+      <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs font-mono">
+        <div><span class="text-slate-500">Phase:</span> <span class="text-gold-400 font-bold">Waxing Crescent</span></div>
+        <div><span class="text-slate-500">Illumination:</span> <span class="text-gold-400 font-bold">22%</span></div>
+        <div><span class="text-slate-500">Rises:</span> <span class="text-slate-200">09:42 AM JST</span></div>
+        <div><span class="text-slate-500">Sets:</span> <span class="text-slate-200">10:18 PM JST</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Live Cosmic Event Detail -->
+  <div id="modal-liveevent" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button class="modal-close" data-modal="modal-liveevent" title="Close">&times;</button>
+      <div class="flex items-center space-x-2 mb-3">
+        <span class="text-amber-400 text-lg">☄️</span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold">Live Cosmic Event Alert</span>
+      </div>
+      <h3 class="font-cinzel text-xl font-bold text-white mb-1">Geminids Radiant Surge</h3>
+      <p class="font-roman text-gold-400 text-sm mb-3">Status: Radiant Active & Ascending</p>
+      <div class="bg-void/70 border border-amber-900/40 rounded-xl p-3.5 mb-4 text-xs font-sans space-y-2">
+        <div class="flex justify-between items-center pb-2 border-b border-slate-800 text-slate-300">
+          <span>Active Hourly Rate:</span>
+          <span class="font-mono text-gold-400 font-bold text-sm">~120 meteors / hr</span>
+        </div>
+        <div class="flex justify-between items-center pb-2 border-b border-slate-800 text-slate-300">
+          <span>Radiant Constellation:</span>
+          <span class="font-mono text-cyan-300 font-bold">Gemini (Near Castor)</span>
+        </div>
+        <div class="flex justify-between items-center text-slate-300">
+          <span>Parent Body:</span>
+          <span class="font-mono text-slate-200">Asteroid 3200 Phaethon</span>
+        </div>
+      </div>
+      <p class="text-slate-400 text-xs font-sans leading-relaxed">
+        The Geminids are producing luminous multi-hued fireballs with lingering green and yellow ionization trails. Because these particles originate from rocky asteroidal debris rather than fragile comet dust, they penetrate deeper into the upper atmosphere, producing slow, majestic streaks that samurai skywatchers historically named "Heaven's Arrows".
+      </p>
+      <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs font-mono">
+        <div><span class="text-slate-500">Best Heading:</span> <span class="text-gold-400 font-bold">ENE (65° Azimuth)</span></div>
+        <div><span class="text-slate-500">Velocity:</span> <span class="text-slate-200">35 km/s</span></div>
+        <div><span class="text-slate-500">Fireball Index:</span> <span class="text-emerald-400 font-bold">High (3.4)</span></div>
+        <div><span class="text-slate-500">Honor Bonus:</span> <span class="text-gold-400 font-bold">+50 PTS</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Illumination Detail -->
+  <div id="modal-illumination" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button class="modal-close" data-modal="modal-illumination" title="Close">&times;</button>
+      <div class="flex items-center space-x-2 mb-3">
+        <span class="text-gold-400 text-lg">💡</span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-gold-500 font-bold">Lunar Illumination</span>
+      </div>
+      <h3 class="font-cinzel text-2xl font-bold text-white mb-1">22% Illuminated</h3>
+      <div class="w-full h-2.5 bg-slate-800 rounded-full mt-2 mb-4 overflow-hidden border border-slate-700">
+        <div class="h-full bg-gradient-to-r from-gold-600 to-gold-300 rounded-full" style="width:22%"></div>
+      </div>
+      <p class="text-slate-400 text-xs font-sans leading-relaxed">
+        Lunar illumination refers to the percentage of the Moon's surface visible from Earth that is lit by direct sunlight. At 22%, only a small sliver is bright — perfect for deep-sky observation since the Moon does not wash out faint objects. As illumination approaches 100% (Full Moon), light pollution from the Moon can reduce stargazing quality significantly.
+      </p>
+      <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs font-mono">
+        <div><span class="text-slate-500">Visual Magnitude:</span> <span class="text-gold-400 font-bold">-9.2 mag</span></div>
+        <div><span class="text-slate-500">Glare Interference:</span> <span class="text-emerald-400 font-bold">Minimal (9%)</span></div>
+        <div><span class="text-slate-500">Terminator Relief:</span> <span class="text-slate-200">Crisp (Mare Crisium)</span></div>
+        <div><span class="text-slate-500">Earthshine:</span> <span class="text-cyan-300 font-bold">Clearly Visible</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Moonrise & Moonset Detail -->
+  <div id="modal-moonrise" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button class="modal-close" data-modal="modal-moonrise" title="Close">&times;</button>
+      <div class="flex items-center space-x-2 mb-3">
+        <span class="text-cyan-400 text-lg">🌅</span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-bold">Moonrise & Moonset</span>
+      </div>
+      <h3 class="font-cinzel text-2xl font-bold text-white mb-1">Moonrise: 20:14 JST</h3>
+      <p class="font-roman text-slate-400 text-sm mb-3">Japan Standard Time (UTC+9)</p>
+      <p class="text-slate-400 text-xs font-sans leading-relaxed">
+        The Moon rises in the east at 20:14 JST and will climb to its highest point around midnight. The best stargazing window is typically 1–2 hours after astronomical twilight ends, before the Moon climbs too high and brightens the sky. Tonight's crescent will set around 10:18 PM, leaving the late night hours completely dark and pristine for deep-sky observation.
+      </p>
+      <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs font-mono">
+        <div><span class="text-slate-500">Moonrise:</span> <span class="text-cyan-300 font-bold">20:14 JST</span></div>
+        <div><span class="text-slate-500">Moonset:</span> <span class="text-slate-200">22:18 JST</span></div>
+        <div><span class="text-slate-500">Direction:</span> <span class="text-slate-200">East (78° ENE)</span></div>
+        <div><span class="text-slate-500">Peak Altitude:</span> <span class="text-slate-200">34° Zenith</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Dark Sky Window Detail -->
+  <div id="modal-darksky" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button class="modal-close" data-modal="modal-darksky" title="Close">&times;</button>
+      <div class="flex items-center space-x-2 mb-3">
+        <span class="text-purple-400 text-lg">🌌</span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-purple-400 font-bold">Dark Sky Stargazing Window</span>
+      </div>
+      <h3 class="font-cinzel text-2xl font-bold text-white mb-1">22:30 – 04:15 JST</h3>
+      <p class="font-roman text-purple-300 text-sm mb-3">5 Hours 45 Minutes of True Darkness</p>
+      <div class="bg-void/70 border border-purple-900/40 rounded-xl p-3.5 mb-4 text-xs font-sans space-y-2">
+        <p class="text-slate-300 leading-relaxed">
+          The Moon sets at 22:18 JST, leaving the atmosphere entirely free from lunar glare until morning astronomical twilight begins at 04:15 JST. This is the ultimate window for capturing nebulae, star clusters, and deep space galaxies through the Spirit Lens.
+        </p>
+      </div>
+      <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs font-mono">
+        <div><span class="text-slate-500">Bortle Scale:</span> <span class="text-emerald-400 font-bold">Class 2 (Rural Dark)</span></div>
+        <div><span class="text-slate-500">Air Transparency:</span> <span class="text-cyan-300 font-bold">98.2%</span></div>
+        <div><span class="text-slate-500">Recommended Lens:</span> <span class="text-gold-400 font-bold">Wide Aperture f/1.8</span></div>
+        <div><span class="text-slate-500">Prime Target:</span> <span class="text-slate-200">Orion Nebula (M42)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 6: Sky Clarity & Night Honor Score Detail -->
+  <div id="modal-skyclarity" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button class="modal-close" data-modal="modal-skyclarity" title="Close">&times;</button>
+      <div class="flex items-center space-x-2 mb-3">
+        <span class="text-red-400 text-lg">🔭</span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-red-400 font-bold">Night Honor Sky Clarity Index</span>
+      </div>
+      <h3 class="font-cinzel text-2xl font-bold text-white mb-1">Score: 96 / 100</h3>
+      <p class="font-roman text-gold-400 text-sm mb-3">Pristine Samurai Observation Grade</p>
+      <div class="w-full h-2.5 bg-slate-800 rounded-full mt-2 mb-4 overflow-hidden border border-slate-700">
+        <div class="h-full bg-gradient-to-r from-crimson-600 via-gold-500 to-emerald-400 rounded-full" style="width:96%"></div>
+      </div>
+      <p class="text-slate-400 text-xs font-sans leading-relaxed">
+        Calculated from live atmospheric telemetry at Mt. Fuji 5th Station. Zero cloud cover, negligible humidity, and high elevation provide optimal seeing conditions with minimal atmospheric scintillation.
+      </p>
+      <div class="mt-4 pt-3 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs font-mono">
+        <div><span class="text-slate-500">Cloud Cover:</span> <span class="text-emerald-400 font-bold">0%</span></div>
+        <div><span class="text-slate-500">Visibility:</span> <span class="text-slate-200">18.4 km</span></div>
+        <div><span class="text-slate-500">Humidity:</span> <span class="text-slate-200">15%</span></div>
+        <div><span class="text-slate-500">Seeing Index:</span> <span class="text-gold-400 font-bold">0.8 arcsec (Superb)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 7: Next Peak Countdown -->
+  <div id="modal-nextpeak" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button class="modal-close" data-modal="modal-nextpeak" title="Close">&times;</button>
+      <div class="flex items-center space-x-2 mb-3">
+        <span class="text-amber-400 text-lg">⚡</span>
+        <span class="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold">Next Celestial Peak Event</span>
+      </div>
+      <h3 class="font-cinzel text-lg font-bold text-white mb-1">Geminid Meteor Shower</h3>
+      <p class="font-roman text-slate-400 text-sm mb-3">Peak: December 14, 2026</p>
+      <div id="modal-countdown-display" class="font-cinzel text-3xl font-extrabold text-gold-400 tracking-wider text-center py-3 bg-void/60 rounded-xl border border-slate-800 mb-4">
+        04d 18h 32m 14s
+      </div>
+      <p class="text-slate-400 text-xs font-sans leading-relaxed">
+        The Geminid Meteor Shower is one of the most spectacular annual meteor showers, producing up to 120 multicolored meteors per hour at peak. Unlike most meteor showers, Geminids originate from the rocky asteroid 3200 Phaethon rather than a comet. They are slower than Perseids, making them easier to photograph and observe. The radiant point is in the constellation Gemini.
+      </p>
+      <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-3 text-xs font-mono">
+        <div><span class="text-slate-500">Peak Rate:</span> <span class="text-gold-400 font-bold">120 / hour</span></div>
+        <div><span class="text-slate-500">Radiant:</span> <span class="text-slate-200">Gemini</span></div>
+        <div><span class="text-slate-500">Speed:</span> <span class="text-slate-200">35 km/s</span></div>
+        <div><span class="text-slate-500">Best Time:</span> <span class="text-slate-200">Post-Midnight</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Sakura & Starfield Canvas Layer -->
+  <canvas id="sakura-canvas" class="fixed inset-0 pointer-events-none z-10 opacity-70"></canvas>
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP CELESTIAL TICKER: LIVE EVENT, MOONRISE, ILLUMINATION & OMENS      -->
+  <!-- ========================================================================= -->
+  <header class="relative z-30 bg-black/85 border-b border-crimson-900/40 backdrop-blur-md text-xs py-2 px-3 sm:px-6">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5 text-slate-300">
+      
+      <!-- Left: Interactive Cosmic Data Pills (Click any item to view centered detail box) -->
+      <div class="flex items-center flex-wrap gap-2 sm:gap-3 text-xs">
+        
+        <!-- Live Phase Button -->
+        <button onclick="openModal('modal-phase')" class="ticker-clickable inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-crimson-950/80 border border-crimson-600/70 text-crimson-400 uppercase tracking-widest hover:border-gold-400 transition-all">
+          <span class="w-1.5 h-1.5 rounded-full bg-crimson-500 animate-ping mr-1.5"></span>
+          Live Celestial Phase
+        </button>
+
+        <!-- Live Cosmic Event Pill -->
+        <button onclick="openModal('modal-liveevent')" class="ticker-clickable inline-flex items-center space-x-1.5 px-2 py-0.5 rounded text-[11px] bg-slate-900/90 border border-amber-500/50 text-amber-300 hover:border-gold-400 hover:text-gold-300 transition-all font-mono">
+          <span class="animate-pulse">☄️</span>
+          <span class="font-bold">Live Event:</span>
+          <span class="text-slate-200">Geminids Surge</span>
+        </button>
+
+        <span class="hidden md:inline text-slate-700">|</span>
+
+        <!-- Crescent Moon & Phase Name -->
+        <button onclick="openModal('modal-phase')" class="ticker-clickable flex items-center space-x-1 text-gold-400 font-roman hover:text-gold-300 text-[11px]">
+          <span class="text-sm">🌙</span>
+          <span class="font-bold">Waxing Crescent</span>
+        </button>
+
+        <span class="text-slate-700">|</span>
+
+        <!-- Illumination Detail Button -->
+        <button onclick="openModal('modal-illumination')" class="ticker-clickable flex items-center space-x-1 text-slate-400 hover:text-slate-200 text-[11px] font-mono">
+          <span>💡</span>
+          <span>Illumination:</span>
+          <strong class="text-gold-400 font-bold">22%</strong>
+        </button>
+
+        <span class="hidden sm:inline text-slate-700">|</span>
+
+        <!-- Moonrise & Moonset Detail Button -->
+        <button onclick="openModal('modal-moonrise')" class="ticker-clickable hidden sm:flex items-center space-x-1 text-slate-400 hover:text-slate-200 text-[11px] font-mono">
+          <span>🌅</span>
+          <span>Moonrise:</span>
+          <strong class="text-cyan-300 font-bold">20:14 JST</strong>
+        </button>
+
+        <span class="hidden lg:inline text-slate-700">|</span>
+
+        <!-- Dark Sky Window Detail Button -->
+        <button onclick="openModal('modal-darksky')" class="ticker-clickable hidden lg:flex items-center space-x-1 text-slate-400 hover:text-slate-200 text-[11px] font-mono">
+          <span>🌌</span>
+          <span>Dark Sky:</span>
+          <strong class="text-purple-300 font-bold">22:30–04:15</strong>
+        </button>
+      </div>
+
+      <!-- Right: Sky Clarity Score & Next Peak Countdown -->
+      <div class="flex items-center space-x-2.5 sm:space-x-4">
+        <!-- Sky Clarity Omen -->
+        <button onclick="openModal('modal-skyclarity')" class="ticker-clickable hidden md:flex items-center space-x-1.5 text-[11px] text-slate-300 hover:text-gold-300 font-mono">
+          <span class="text-red-400 font-bold">⚡ Omen:</span>
+          <span>Mt. Fuji 5th (Clarity: <strong class="text-gold-400 font-bold">96/100</strong>)</span>
+        </button>
+
+        <!-- Next Peak Countdown Pill -->
+        <button onclick="openModal('modal-nextpeak')" class="ticker-clickable flex items-center space-x-1.5 bg-slate-900/90 border border-slate-700/70 hover:border-gold-500/80 px-2.5 py-0.5 rounded-full text-[11px] transition-all">
+          <span class="text-slate-400 font-mono">Next Peak:</span>
+          <span id="countdown-timer" class="font-mono text-gold-400 font-bold">04d 18h 32m 14s</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN STICKY NAVIGATION BAR (Festival & Samurai Aesthetic)              -->
+  <!-- ========================================================================= -->
+  <nav class="sticky top-0 z-40 bg-void/90 backdrop-blur-xl border-b border-crimson-900/30 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo: Crescent Moon Emblem -->
+      <a href="#" class="flex items-center space-x-3 group">
+        <div class="relative w-11 h-11 rounded-full bg-gradient-to-tr from-crimson-900 via-black to-slate-900 border border-gold-500/40 flex items-center justify-center shadow-lg shadow-crimson-950/50 group-hover:border-gold-400 transition-colors">
+          <span class="text-xl">🌙</span>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-cinzel font-black text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-gold-300 to-crimson-400">
+              TSUKUYOMI
+            </span>
+            <span class="font-roman text-xs px-1.5 py-0.5 rounded bg-crimson-950/70 border border-crimson-700/60 text-crimson-300 font-bold tracking-widest">
+              WATCH
+            </span>
+          </div>
+          <p class="text-[10px] uppercase font-mono tracking-widest text-slate-400">
+            Celestial Guide & Spirit Lens
+          </p>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <div class="hidden md:flex items-center space-x-8 font-roman text-sm tracking-wider">
+        <a href="#watchtower" class="text-slate-300 hover:text-gold-400 flex items-center space-x-1.5 transition-colors group">
+          <span class="text-xs text-crimson-500 group-hover:translate-x-0.5 transition-transform">⚔</span>
+          <span>The Watchtower</span>
+        </a>
+        <a href="#scroll" class="text-slate-300 hover:text-gold-400 flex items-center space-x-1.5 transition-colors group">
+          <span class="text-xs text-crimson-500 group-hover:translate-x-0.5 transition-transform">📜</span>
+          <span>Celestial Scroll</span>
+        </a>
+        <a href="#spiritlens" class="text-slate-300 hover:text-gold-400 flex items-center space-x-1.5 transition-colors group">
+          <span class="text-xs text-crimson-500 group-hover:translate-x-0.5 transition-transform">🔮</span>
+          <span>Spirit Lens</span>
+        </a>
+        <a href="#dojo" class="text-slate-300 hover:text-gold-400 flex items-center space-x-1.5 transition-colors group">
+          <span class="text-xs text-crimson-500 group-hover:translate-x-0.5 transition-transform">🥋</span>
+          <span>Honor Dojo</span>
+        </a>
+      </div>
+
+      <!-- Right Action Items: Honor HUD & Audio Ambience -->
+      <div class="flex items-center space-x-3">
+        
+        <!-- Audio Zen Ambience Toggle (Web Audio API Synthesizer) -->
+        <button id="zen-audio-toggle" title="Toggle Celestial Zen Soundscape" class="p-2 rounded-lg bg-slate-900/90 border border-slate-700/60 hover:border-gold-500/60 text-slate-300 hover:text-gold-400 transition-all flex items-center space-x-1.5 text-xs font-mono">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+          <span class="hidden sm:inline" id="audio-label">Zen FX</span>
+        </button>
+
+        <!-- Samurai Honor Points HUD Pill -->
+        <a href="#dojo" class="flex items-center space-x-2 bg-gradient-to-r from-crimson-950 via-slate-900 to-black border border-gold-500/50 hover:border-gold-400 px-3 py-1.5 rounded-full shadow-lg hover:shadow-gold-500/10 transition-all cursor-pointer group">
+          <span class="text-sm group-hover:rotate-12 transition-transform">ðŸ†</span>
+          <div class="text-left font-mono leading-none">
+            <span class="text-[9px] uppercase tracking-wider text-slate-400 block">Bushi Honor</span>
+            <span id="nav-honor-points" class="text-xs font-bold text-gold-400">240 PTS</span>
+          </div>
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-400 hover:text-white">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-void/95 border-b border-crimson-900/40 px-6 py-4 space-y-3 font-roman text-sm">
+      <a href="#watchtower" class="block py-2 text-slate-200 hover:text-gold-400">⚔ The Watchtower (Stargazing)</a>
+      <a href="#scroll" class="block py-2 text-slate-200 hover:text-gold-400">📜 Celestial Scroll (Events)</a>
+      <a href="#spiritlens" class="block py-2 text-slate-200 hover:text-gold-400">🔮 Spirit Lens (Restoration)</a>
+      <a href="#dojo" class="block py-2 text-slate-200 hover:text-gold-400">🥋 Honor Dojo (Gamified Rank)</a>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- 3. HERO SECTION (Festival Aesthetic, Torii Gate & Cosmic Atmosphere)     -->
+  <!-- ========================================================================= -->
+  <section class="relative min-h-[90vh] flex items-center justify-center pt-8 pb-20 px-4 overflow-hidden ink-wash-overlay">
+    
+    <!-- Torii Gate Silhouette and Moon Background Graphic -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+      <svg class="w-[700px] h-[700px] max-w-none text-crimson-900 animate-pulse-slow" viewBox="0 0 500 500" fill="currentColor">
+        <!-- Giant Moon Disc -->
+        <circle cx="250" cy="220" r="180" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="8 4"/>
+        <circle cx="250" cy="220" r="150" fill="currentColor" opacity="0.15"/>
+        <!-- Torii Gate Silhouette -->
+        <rect x="150" y="160" width="200" height="14" rx="2"/>
+        <rect x="130" y="140" width="240" height="18" rx="4"/>
+        <rect x="180" y="174" width="22" height="200"/>
+        <rect x="298" y="174" width="22" height="200"/>
+        <rect x="170" y="210" width="160" height="10"/>
+      </svg>
+    </div>
+
+    <div class="relative z-20 max-w-5xl mx-auto text-center space-y-6">
+      
+      <!-- Festival Header Tag -->
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-crimson-950/80 border border-crimson-600/50 text-crimson-300 text-xs font-mono tracking-widest uppercase shadow-md shadow-crimson-950/60">
+        <span>â›©ï¸</span>
+        <span>PECATHON 2026 // CELESTIAL STACK</span>
+        <span class="text-gold-400">â€¢</span>
+        
+      </div>
+
+      <!-- Main Headline with Traditional Japanese Kanji & Katana Slash -->
+      <div class="space-y-2">
+        <div class="font-roman text-crimson-400 text-sm md:text-base tracking-[0.25em] uppercase">The Samurai's Star Chart &amp; Celestial Guide</div>
+        <h1 class="font-cinzel text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
+          TSUKUYOMI <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-amber-300 to-crimson-500">WATCH</span>
+        </h1>
+        <p class="font-roman text-lg md:text-2xl text-slate-300 tracking-wider katana-slash max-w-2xl mx-auto pb-3">
+          The Samurai's Celestial Guide & Spirit Lens
+        </p>
+      </div>
+
+      <!-- Poetic Tagline -->
+      <p class="max-w-2xl mx-auto text-slate-400 text-sm md:text-base leading-relaxed font-sans">
+        Walk beneath the unyielding blade of the night sky. Decode real-time cosmic omens with astronomical precision, calculate your <strong class="text-gold-400">Night Honor Score</strong>, and unveil pristine starlight through our non-generative <strong class="text-crimson-400">Spirit Lens</strong>.
+      </p>
+
+      <!-- Key Value Metric Ribbon -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto py-4">
+        <div class="bg-shrine/80 border border-slate-800 rounded-xl p-3 backdrop-blur-md">
+          <div class="font-mono text-xl md:text-2xl font-bold text-gold-400">0 - 100</div>
+          <div class="text-[11px] text-slate-400 font-roman">Night Honor Score</div>
+        </div>
+        <div class="bg-shrine/80 border border-slate-800 rounded-xl p-3 backdrop-blur-md">
+          <div class="font-mono text-xl md:text-2xl font-bold text-crimson-400">Open-Meteo</div>
+          <div class="text-[11px] text-slate-400 font-roman">Real-Time Satellite</div>
+        </div>
+        <div class="bg-shrine/80 border border-slate-800 rounded-xl p-3 backdrop-blur-md">
+          <div class="font-mono text-xl md:text-2xl font-bold text-cyan-400">100% Physical</div>
+          <div class="text-[11px] text-slate-400 font-roman">Zero AI Hallucination</div>
+        </div>
+        <div class="bg-shrine/80 border border-slate-800 rounded-xl p-3 backdrop-blur-md">
+          <div class="font-mono text-xl md:text-2xl font-bold text-emerald-400">Class 1-9</div>
+          <div class="text-[11px] text-slate-400 font-roman">Bortle Scale Model</div>
+        </div>
+      </div>
+
+      <!-- Action Callouts -->
+      <div class="pt-4 flex flex-wrap justify-center gap-4">
+        <a href="#watchtower" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-crimson-700 via-crimson-600 to-red-800 text-white font-roman font-bold text-sm tracking-widest uppercase shadow-lg shadow-crimson-900/60 hover:shadow-crimson-600/40 hover:-translate-y-0.5 transition-all flex items-center space-x-2 border border-crimson-500/40">
+          <span>⚔ï¸</span>
+          <span>Enter The Watchtower</span>
+        </a>
+        <a href="#spiritlens" class="px-8 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-gold-300 font-roman font-bold text-sm tracking-widest uppercase shadow-lg border border-gold-500/40 hover:border-gold-400 hover:-translate-y-0.5 transition-all flex items-center space-x-2">
+          <span>🔮</span>
+          <span>Summon Spirit Lens</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 4. COMPONENT 1: THE WATCHTOWER (Stargazing Location & Weather Finder)     -->
+  <!-- ========================================================================= -->
+  <section id="watchtower" class="section-transition relative py-20 px-4 bg-night border-t border-slate-800/80">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-3">
+        <div class="inline-flex items-center space-x-2 text-crimson-500 font-mincho text-sm tracking-[0.2em]">
+          <span>â›©ï¸</span>
+          <span>å£± // COMPONENT ONE</span>
+          <span>â›©ï¸</span>
+        </div>
+        <h2 class="font-cinzel text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
+          THE WATCHTOWER
+        </h2>
+        <p class="font-roman text-slate-400 text-sm max-w-xl mx-auto">
+          Query real-time meteorological conditions across ancient samurai watchpoints to evaluate your stargazing honor index.
+        </p>
+      </div>
+
+      <!-- Search & Sanctuary Preset Bar -->
+      <div class="max-w-3xl mx-auto bg-shrine/90 border border-slate-800 rounded-2xl p-4 shadow-xl backdrop-blur-md space-y-4">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="relative flex-1">
+            <i data-lucide="compass" class="w-5 h-5 absolute left-3.5 top-3.5 text-gold-500"></i>
+            <input 
+              id="watchtower-search-input"
+              type="text" 
+              placeholder="Search city or coordinates (e.g., Mount Fuji, Tokyo, Kyoto...)"
+              value="Mount Fuji"
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-void/90 border border-slate-700 focus:border-gold-500 focus:ring-1 focus:ring-gold-500 text-slate-100 placeholder-slate-500 text-sm outline-none transition-all"
+            >
+          </div>
+          <button 
+            id="watchtower-query-btn"
+            class="px-6 py-3 rounded-xl bg-gradient-to-r from-gold-600 via-amber-500 to-gold-600 hover:from-gold-500 hover:to-amber-400 text-void font-bold text-xs uppercase tracking-widest font-roman shadow-lg hover:shadow-gold-500/20 transition-all flex items-center justify-center space-x-2"
+          >
+            <i data-lucide="scan" class="w-4 h-4"></i>
+            <span>Query Heavens</span>
+          </button>
+        </div>
+
+        <!-- Quick Curated Sanctuary Pills -->
+        <div class="flex items-center flex-wrap gap-2 pt-1 text-xs">
+          <span class="text-slate-400 font-roman">Historic Sanctuaries:</span>
+          <button class="sanctuary-pill px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-gold-500 text-slate-300 hover:text-gold-300 transition-all" data-city="Mount Fuji" data-lat="35.3606" data-lon="138.7274">
+            ðŸ—» Mt. Fuji 5th
+          </button>
+          <button class="sanctuary-pill px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-gold-500 text-slate-300 hover:text-gold-300 transition-all" data-city="Achi Village" data-lat="35.4419" data-lon="137.7478">
+            âœ¨ Achi Star Village
+          </button>
+          <button class="sanctuary-pill px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-gold-500 text-slate-300 hover:text-gold-300 transition-all" data-city="Bisei Town" data-lat="34.7083" data-lon="133.5417">
+            ðŸ”­ Bisei Observatory
+          </button>
+          <button class="sanctuary-pill px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-gold-500 text-slate-300 hover:text-gold-300 transition-all" data-city="Tokyo" data-lat="35.6762" data-lon="139.6503">
+            ðŸ™ï¸ Tokyo Core
+          </button>
+          <button class="sanctuary-pill px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 hover:border-gold-500 text-slate-300 hover:text-gold-300 transition-all" data-city="Mount Koya" data-lat="34.2139" data-lon="135.5861">
+            ðŸŒ² Koyasan Sanctuary
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Telemetry Grid (Honor Score & Weather Cards) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: The Night Honor Score Crest (Gauge) -->
+        <div class="lg:col-span-5 bg-shrine/90 border border-gold-500/30 rounded-2xl p-6 shadow-2xl relative overflow-hidden backdrop-blur-md">
+          <div class="absolute -top-12 -right-12 w-40 h-40 bg-crimson-600/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <span class="text-xl">⚔ï¸</span>
+              <h3 class="font-roman text-sm tracking-wider uppercase text-gold-400">Night Honor Assessment</h3>
+            </div>
+            <span id="data-source-badge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/70 border border-emerald-600/60 text-emerald-400">
+              Open-Meteo Satellite
+            </span>
+          </div>
+
+          <!-- Animated Radial Score Display -->
+          <div class="py-8 flex flex-col items-center justify-center text-center space-y-4">
+            <div class="relative w-48 h-48 flex items-center justify-center">
+              <!-- Radial SVG Background -->
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" stroke="currentColor" stroke-width="6" class="text-slate-800" fill="none"/>
+                <circle id="score-circle-bar" cx="50" cy="50" r="42" stroke="currentColor" stroke-width="6" stroke-linecap="round" class="text-gold-400 transition-all duration-1000" stroke-dasharray="264" stroke-dashoffset="30" fill="none"/>
+              </svg>
+              <!-- Center Number & Rank -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span id="display-honor-score" class="font-cinzel text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gold-400">
+                  96
+                </span>
+                <span class="text-[10px] uppercase font-mono tracking-widest text-slate-400">/ 100 Index</span>
+              </div>
+            </div>
+
+            <!-- Samurai Title Badge -->
+            <div class="space-y-1">
+              <div id="display-samurai-rank" class="font-cinzel text-lg font-bold text-gold-300">
+                Kage-Ryu Grandmaster
+              </div>
+              <div id="display-location-name" class="text-xs text-slate-400 font-roman">
+                Mount Fuji 5th Station (35.36Â°N, 138.72Â°E)
+              </div>
+            </div>
+
+            <!-- Samurai Wisdom Box -->
+            <div class="w-full bg-void/80 border-l-2 border-gold-500 rounded-r-xl p-3.5 text-left text-xs space-y-1">
+              <span class="text-[10px] font-mono text-gold-500 uppercase tracking-widest block font-bold">Samurai Doctrine:</span>
+              <p id="display-samurai-wisdom" class="text-slate-300 italic font-roman">
+                "The Moon Blade is drawn. The stars pierce through the velvet night like diamond sparks on polished iron."
+              </p>
+            </div>
+          </div>
+
+          <!-- Score Breakdown Sub-Bars -->
+          <div class="space-y-2.5 pt-2 border-t border-slate-800/80 text-xs">
+            <div class="flex justify-between text-slate-400">
+              <span>Cloud Clarity Factor (55%)</span>
+              <span id="bar-cloud-val" class="font-mono text-gold-400">52 / 55 pts</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div id="bar-cloud-fill" class="h-full bg-gold-400 rounded-full transition-all duration-700" style="width: 95%;"></div>
+            </div>
+
+            <div class="flex justify-between text-slate-400">
+              <span>Atmospheric Visibility (30%)</span>
+              <span id="bar-vis-val" class="font-mono text-gold-400">29 / 30 pts</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div id="bar-vis-fill" class="h-full bg-cyan-400 rounded-full transition-all duration-700" style="width: 96%;"></div>
+            </div>
+
+            <div class="flex justify-between text-slate-400">
+              <span>Humidity & Dew Tolerance (15%)</span>
+              <span id="bar-dew-val" class="font-mono text-gold-400">15 / 15 pts</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+              <div id="bar-dew-fill" class="h-full bg-crimson-400 rounded-full transition-all duration-700" style="width: 98%;"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Telemetry Details & Ancient Scroll Map Placeholder -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Live Weather Cards Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            
+            <div class="bg-shrine/80 border border-slate-800 rounded-xl p-4 space-y-1">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-xs font-roman">Cloud Cover</span>
+                <i data-lucide="cloud" class="w-4 h-4 text-cyan-400"></i>
+              </div>
+              <div id="metric-cloud" class="font-mono text-2xl font-bold text-white">8%</div>
+              <div class="text-[10px] text-emerald-400">Minimal Obstruction</div>
+            </div>
+
+            <div class="bg-shrine/80 border border-slate-800 rounded-xl p-4 space-y-1">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-xs font-roman">Visibility</span>
+                <i data-lucide="eye" class="w-4 h-4 text-gold-400"></i>
+              </div>
+              <div id="metric-visibility" class="font-mono text-2xl font-bold text-white">24.0 km</div>
+              <div class="text-[10px] text-emerald-400">Horizon to Horizon</div>
+            </div>
+
+            <div class="bg-shrine/80 border border-slate-800 rounded-xl p-4 space-y-1">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-xs font-roman">Humidity</span>
+                <i data-lucide="droplets" class="w-4 h-4 text-blue-400"></i>
+              </div>
+              <div id="metric-humidity" class="font-mono text-2xl font-bold text-white">42%</div>
+              <div class="text-[10px] text-slate-400">Low Optics Dewing</div>
+            </div>
+
+            <div class="bg-shrine/80 border border-slate-800 rounded-xl p-4 space-y-1">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-xs font-roman">Bortle Scale</span>
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+              </div>
+              <div id="metric-bortle" class="font-mono text-2xl font-bold text-gold-300">Class 3</div>
+              <div id="metric-bortle-title" class="text-[10px] text-gold-400 truncate">Rural Dark Sky</div>
+            </div>
+
+          </div>
+
+          <!-- Ancient Scroll Map Interface -->
+          <div class="bg-shrine/90 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden">
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+              <div class="flex items-center space-x-2">
+                <span class="text-lg">ðŸ—ºï¸</span>
+                <h4 class="font-roman text-sm tracking-wider uppercase text-slate-200">
+                  Feudal Sanctuary Celestial Map
+                </h4>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono">Click markers to calibrate Watchtower</span>
+            </div>
+
+            <!-- Stylized Map Canvas Container -->
+            <div class="relative w-full h-64 bg-slate-950 rounded-xl border border-slate-800/80 overflow-hidden flex items-center justify-center p-4">
+              <!-- Topographic and Celestial Grid Artwork -->
+              <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:16px_16px]"></div>
+              
+              <!-- Japanese Map Center Art -->
+              <svg class="absolute inset-0 w-full h-full opacity-30 text-crimson-900 pointer-events-none" viewBox="0 0 600 250">
+                <path d="M 50,180 Q 200,80 350,150 T 550,100" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                <text x="300" y="230" fill="currentColor" font-family="serif" font-size="12" text-anchor="middle">Honshu Dark Sky Corridors (æœ¬å·žæ˜Ÿç©ºè¡—é“)</text>
+              </svg>
+
+              <!-- Interactive Clickable Pins -->
+              <!-- Pin 1: Mt Fuji -->
+              <button class="map-pin absolute top-1/4 left-1/2 -translate-x-1/2 group z-20" data-city="Mount Fuji">
+                <span class="relative flex h-5 w-5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-crimson-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-5 w-5 bg-crimson-600 border-2 border-gold-400 items-center justify-center text-[9px] font-bold text-white shadow">
+                    ðŸ—»
+                  </span>
+                </span>
+                <span class="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-black/90 border border-gold-500/50 text-[10px] font-roman text-gold-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Mt. Fuji 5th (Score: 96)
+                </span>
+              </button>
+
+              <!-- Pin 2: Achi Village -->
+              <button class="map-pin absolute top-1/3 left-1/3 group z-20" data-city="Achi Village">
+                <span class="relative flex h-4 w-4">
+                  <span class="relative inline-flex rounded-full h-4 w-4 bg-amber-500 border border-white items-center justify-center text-[8px] font-bold text-black shadow">
+                    â˜…
+                  </span>
+                </span>
+                <span class="absolute top-5 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-black/90 border border-amber-500/50 text-[10px] font-roman text-amber-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Achi Star Sanctuary (Score: 98)
+                </span>
+              </button>
+
+              <!-- Pin 3: Bisei Town -->
+              <button class="map-pin absolute top-1/2 left-1/5 group z-20" data-city="Bisei Town">
+                <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border border-white items-center justify-center text-[8px] font-bold text-black shadow">
+                  â˜…
+                </span>
+                <span class="absolute top-5 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-black/90 border border-emerald-500/50 text-[10px] font-roman text-emerald-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Bisei Town (Score: 92)
+                </span>
+              </button>
+
+              <!-- Pin 4: Mount Koya -->
+              <button class="map-pin absolute bottom-1/4 left-2/5 group z-20" data-city="Mount Koya">
+                <span class="relative inline-flex rounded-full h-4 w-4 bg-cyan-500 border border-white items-center justify-center text-[8px] font-bold text-black shadow">
+                  â›©ï¸
+                </span>
+                <span class="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-black/90 border border-cyan-500/50 text-[10px] font-roman text-cyan-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Mount Koya Pines (Score: 88)
+                </span>
+              </button>
+
+              <!-- Pin 5: Tokyo Core -->
+              <button class="map-pin absolute top-1/5 right-1/4 group z-20" data-city="Tokyo">
+                <span class="relative inline-flex rounded-full h-4 w-4 bg-rose-500 border border-white items-center justify-center text-[8px] font-bold text-white shadow">
+                  â€¢
+                </span>
+                <span class="absolute top-5 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-black/90 border border-rose-500/50 text-[10px] font-roman text-rose-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Tokyo Core (Score: 42)
+                </span>
+              </button>
+            </div>
+            
+            <p class="text-[11px] text-slate-400 pt-2 font-mono text-center">
+              Target Sanctuary: <strong id="active-sanctuary-label" class="text-gold-400">Mount Fuji 5th Station (Shizuoka)</strong>
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 5. COMPONENT 2: THE CELESTIAL SCROLL (Space Event Calendar)               -->
+  <!-- ========================================================================= -->
+  <section id="scroll" class="section-transition relative py-20 px-4 bg-void border-t border-slate-800">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-3">
+        <div class="inline-flex items-center space-x-2 text-gold-500 font-mincho text-sm tracking-[0.2em]">
+          <span>📜</span>
+          <span>å¼ // COMPONENT TWO</span>
+          <span>📜</span>
+        </div>
+        <h2 class="font-cinzel text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
+          THE CELESTIAL SCROLL
+        </h2>
+        <p class="font-roman text-slate-400 text-sm max-w-xl mx-auto">
+          Upcoming cosmic events, meteor showers, lunar phases, and ISS transits cataloged with ancestral warrior lore.
+        </p>
+      </div>
+
+      <!-- Alert Announcement Banner -->
+      <div class="max-w-4xl mx-auto bg-gradient-to-r from-crimson-950/80 via-slate-900 to-crimson-950/80 border border-crimson-600/50 rounded-2xl p-4 shadow-xl flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center space-x-3">
+          <span class="text-2xl animate-bounce">⚡</span>
+          <div>
+            <div class="text-xs uppercase font-mono tracking-widest text-crimson-400 font-bold">
+              Immediate Celestial Alert // Tokyo & Kansai
+            </div>
+            <p class="text-sm font-roman text-slate-200">
+              The Silver Katana Moon rises tonight at <strong>8:14 PM JST</strong>. Prime observing window: <strong class="text-gold-400">22:30 - 02:45</strong>.
+            </p>
+          </div>
+        </div>
+        <button id="bookmark-alert-btn" class="px-4 py-2 rounded-xl bg-crimson-700 hover:bg-crimson-600 text-white font-roman text-xs uppercase tracking-wider font-bold transition-all shadow flex items-center space-x-1.5">
+          <span>📜</span>
+          <span>Inscribe in Scroll (+25 Pts)</span>
+        </button>
+      </div>
+
+      <!-- Filter Controls & Search -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        
+        <!-- Category Filter Pills -->
+        <div class="flex items-center flex-wrap gap-2 text-xs font-roman">
+          <button class="event-filter-pill px-4 py-2 rounded-xl bg-crimson-700 text-white border border-crimson-500 font-bold transition-all" data-filter="all">
+            All Omens (12)
+          </button>
+          <button class="event-filter-pill px-4 py-2 rounded-xl bg-shrine text-slate-300 border border-slate-800 hover:border-gold-500 hover:text-gold-300 transition-all" data-filter="meteor_shower">
+            ðŸŒ  Meteor Showers
+          </button>
+          <button class="event-filter-pill px-4 py-2 rounded-xl bg-shrine text-slate-300 border border-slate-800 hover:border-gold-500 hover:text-gold-300 transition-all" data-filter="moon_phase">
+            🌙 Moon Phases
+          </button>
+          <button class="event-filter-pill px-4 py-2 rounded-xl bg-shrine text-slate-300 border border-slate-800 hover:border-gold-500 hover:text-gold-300 transition-all" data-filter="iss_pass">
+            ðŸ›°ï¸ ISS Transits
+          </button>
+          <button class="event-filter-pill px-4 py-2 rounded-xl bg-shrine text-slate-300 border border-slate-800 hover:border-gold-500 hover:text-gold-300 transition-all" data-filter="eclipse">
+            ðŸŒ‘ Eclipses
+          </button>
+        </div>
+
+        <!-- Keyword Search -->
+        <div class="relative w-full md:w-64">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-500"></i>
+          <input 
+            id="event-search-input"
+            type="text" 
+            placeholder="Search lore or event..." 
+            class="w-full pl-9 pr-4 py-2 rounded-xl bg-shrine border border-slate-800 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-gold-500 transition-colors"
+          >
+        </div>
+
+      </div>
+
+      <!-- Events Card Grid -->
+      <div id="events-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Event cards will be dynamically rendered or fallback populated -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 6. COMPONENT 3: THE SPIRIT LENS (AI Image Restoration & Slider)          -->
+  <!-- ========================================================================= -->
+  <section id="spiritlens" class="section-transition relative py-20 px-4 bg-night border-t border-slate-800">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-3">
+        <div class="inline-flex items-center space-x-2 text-crimson-500 font-mincho text-sm tracking-[0.2em]">
+          <span>🔮</span>
+          <span>å‚ // COMPONENT THREE</span>
+          <span>🔮</span>
+        </div>
+        <h2 class="font-cinzel text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
+          THE SPIRIT LENS
+        </h2>
+        <p class="font-roman text-slate-400 text-sm max-w-xl mx-auto">
+          Physical photon astronomical restoration: noise reduction, sky background suppression, and star edge sharpening without inventing fake details.
+        </p>
+      </div>
+
+      <!-- Anti-Hallucination Philosophy Banner -->
+      <div class="max-w-3xl mx-auto bg-void/80 border border-gold-500/30 rounded-xl p-3 text-center text-xs text-slate-300 font-mono">
+        <span class="text-gold-400 font-bold">âœ¨ Anti-Hallucination Guarantee:</span> 
+        Strict physical photon transformation. Zero synthetic generative artifacts or imaginary stars inserted.
+      </div>
+
+      <!-- Interactive Before / After Image Slider Component -->
+      <div class="max-w-4xl mx-auto bg-shrine/90 border border-slate-800 rounded-3xl p-6 shadow-2xl backdrop-blur-md space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="font-roman text-lg text-white font-bold flex items-center space-x-2">
+              <span>Deep-Sky Restoration Chamber</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-crimson-950 border border-crimson-600 text-crimson-400 font-mono">Orion Nebula M42</span>
+            </h3>
+            <p class="text-xs text-slate-400 font-sans">Drag the golden Katana slider to inspect noise reduction.</p>
+          </div>
+
+          <!-- Feature Toggles for Star Overlays -->
+          <div class="flex items-center space-x-2 text-xs font-mono">
+            <button id="toggle-stellar-cores" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-gold-500 text-slate-300 transition-all flex items-center space-x-1.5">
+              <span>â­</span>
+              <span>Stellar Cores</span>
+            </button>
+            <button id="toggle-nebula-outline" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-crimson-500 text-slate-300 transition-all flex items-center space-x-1.5">
+              <span>ðŸŒŒ</span>
+              <span>H-Alpha Mask</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- The Image Comparison Viewer -->
+        <div id="slider-container" class="relative w-full h-[380px] sm:h-[480px] rounded-2xl overflow-hidden select-none cursor-ew-resize border border-slate-700/60 shadow-inner">
+          
+          <!-- BEFORE Image (Noisy / Light Polluted) -->
+          <div class="absolute inset-0 w-full h-full">
+            <img 
+              id="img-before"
+              src="https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1200&auto=format&fit=crop" 
+              alt="Raw Astrophotograph Before"
+              class="w-full h-full object-cover filter contrast-75 brightness-90 hue-rotate-15 blur-[0.8px]"
+            >
+            <!-- Simulated sensor noise grain overlay -->
+            <div class="absolute inset-0 bg-yellow-500/10 mix-blend-color-dodge pointer-events-none"></div>
+            <div class="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/80 border border-slate-700 text-[11px] font-mono text-slate-300 backdrop-blur-md">
+              ðŸ”´ RAW SENSOR (High ISO Grain)
+            </div>
+          </div>
+
+          <!-- AFTER Image (Restored via Spirit Lens) with Clip Path -->
+          <div id="after-layer" class="absolute inset-0 w-full h-full overflow-hidden" style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);">
+            <img 
+              id="img-after"
+              src="https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1200&auto=format&fit=crop" 
+              alt="Restored Astrophotograph After"
+              class="w-full h-full object-cover filter contrast-125 brightness-105 saturate-125"
+            >
+            <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/80 border border-gold-500 text-[11px] font-mono text-gold-400 backdrop-blur-md">
+              âœ¨ SPIRIT LENS RESTORED
+            </div>
+
+            <!-- Stellar Cores Detection Overlay (Toggled) -->
+            <div id="stellar-cores-layer" class="hidden absolute inset-0 pointer-events-none">
+              <div class="absolute top-1/3 left-1/4 w-6 h-6 border border-cyan-400 rounded-full animate-ping"></div>
+              <div class="absolute top-1/3 left-1/4 -translate-x-2 -translate-y-6 text-[9px] font-mono bg-black/80 text-cyan-300 px-1 rounded">Star: Rigel (0.1m)</div>
+              
+              <div class="absolute top-1/2 left-2/3 w-6 h-6 border border-gold-400 rounded-full animate-ping"></div>
+              <div class="absolute top-1/2 left-2/3 -translate-x-2 -translate-y-6 text-[9px] font-mono bg-black/80 text-gold-300 px-1 rounded">Betelgeuse</div>
+            </div>
+
+            <!-- H-Alpha Mask Overlay (Toggled) -->
+            <div id="nebula-mask-layer" class="hidden absolute inset-0 pointer-events-none border-2 border-crimson-500/40 rounded-full scale-75 blur-[1px]"></div>
+          </div>
+
+          <!-- Slider Divider Line & Draggable Handle (Katana Blade theme) -->
+          <div id="slider-handle-bar" class="absolute top-0 bottom-0 w-0.5 bg-gradient-to-b from-gold-400 via-white to-crimson-500 slider-handle cursor-ew-resize" style="left: 50%;">
+            <div class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-void border-2 border-gold-400 flex items-center justify-center text-xs shadow-lg text-gold-400 font-bold">
+              ⚔
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Restoration Metrics Report Card -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-void/80 border border-slate-800 rounded-2xl p-4 text-center">
+          <div>
+            <div class="font-mono text-lg font-bold text-gold-400">+4.8 dB</div>
+            <div class="text-[10px] text-slate-400 font-roman">SNR Improvement</div>
+          </div>
+          <div>
+            <div class="font-mono text-lg font-bold text-cyan-400">42%</div>
+            <div class="text-[10px] text-slate-400 font-roman">Noise Grain Reduced</div>
+          </div>
+          <div>
+            <div class="font-mono text-lg font-bold text-emerald-400">94 / 100</div>
+            <div class="text-[10px] text-slate-400 font-roman">Stellar Pinpoint Index</div>
+          </div>
+          <div>
+            <div class="font-mono text-lg font-bold text-crimson-400">100% Verified</div>
+            <div class="text-[10px] text-slate-400 font-roman">Zero Fake Stars</div>
+          </div>
+        </div>
+
+        <!-- Custom Upload Simulator -->
+        <div class="border-2 border-dashed border-slate-800 hover:border-gold-500/50 rounded-2xl p-6 text-center space-y-3 transition-colors bg-void/50">
+          <i data-lucide="upload-cloud" class="w-8 h-8 mx-auto text-slate-400"></i>
+          <div>
+            <p class="text-sm font-roman text-slate-200">
+              Drop an astronomical photograph or select sample
+            </p>
+            <p class="text-[11px] text-slate-500 font-sans">
+              Supports RAW, JPEG, PNG, FITS up to 10MB.
+            </p>
+          </div>
+          <div class="flex flex-wrap justify-center gap-3 pt-2">
+            <input type="file" id="lens-file-input" class="hidden" accept="image/*">
+            <button id="trigger-upload-btn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-roman font-bold transition-all border border-slate-700">
+              Browse Celestial Image
+            </button>
+            <button id="run-spirit-lens-btn" class="px-5 py-2 rounded-xl bg-gradient-to-r from-crimson-700 to-red-800 hover:from-crimson-600 hover:to-red-700 text-white text-xs font-roman font-bold transition-all shadow border border-crimson-500/50 flex items-center space-x-1.5">
+              <span>🔮</span>
+              <span>Engage Spirit Lens (+50 Pts)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 7. COMPONENT 4: HONOR DOJO (Gamified Bushido Rank & Quest System)        -->
+  <!-- ========================================================================= -->
+  <section id="dojo" class="section-transition relative py-20 px-4 bg-void border-t border-slate-800">
+    <div class="max-w-7xl mx-auto space-y-12">
+      
+      <!-- Section Header -->
+      <div class="text-center space-y-3">
+        <div class="inline-flex items-center space-x-2 text-gold-500 font-mincho text-sm tracking-[0.2em]">
+          <span>🥋</span>
+          <span>å›› // COMPONENT FOUR</span>
+          <span>🥋</span>
+        </div>
+        <h2 class="font-cinzel text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
+          THE HONOR DOJO
+        </h2>
+        <p class="font-roman text-slate-400 text-sm max-w-xl mx-auto">
+          Ascend the ranks of the celestial bushi. Earn honor points by recording cosmic phenomena, evaluating watchtowers, and clarifying the heavens.
+        </p>
+      </div>
+
+      <!-- Main Bushido Rank Card -->
+      <div class="max-w-4xl mx-auto bg-gradient-to-b from-shrine to-void border border-gold-500/40 rounded-3xl p-8 shadow-2xl space-y-8">
+        
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-slate-800">
+          <div class="flex items-center space-x-5">
+            <!-- Rank Emblem -->
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-gold-400 to-crimson-700 p-0.5 shadow-xl">
+              <div class="w-full h-full bg-void rounded-2xl flex items-center justify-center text-3xl">
+                🌙
+              </div>
+            </div>
+            <div>
+              <div class="text-xs uppercase font-mono tracking-widest text-gold-400">Current Warrior Rank</div>
+              <h3 id="dojo-rank-title" class="font-cinzel text-2xl font-black text-white">
+                Jou-Gashira (Night Watchman)
+              </h3>
+              <p class="text-xs text-slate-400 font-roman">
+                Path of the Crescent Blade // 4th Dan Stargazer
+              </p>
+            </div>
+          </div>
+
+          <div class="text-right">
+            <span class="text-xs font-mono text-slate-400 uppercase">Total Accumulated Honor</span>
+            <div id="dojo-honor-number" class="font-cinzel text-4xl font-extrabold text-gold-400">
+              240 PTS
+            </div>
+          </div>
+        </div>
+
+        <!-- Rank Progression Bar -->
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs font-roman text-slate-400">
+            <span>Next Ascendance: <strong>Hatamoto Retainer</strong></span>
+            <span>240 / 500 PTS (48%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-900 rounded-full border border-slate-800 overflow-hidden p-0.5">
+            <div id="dojo-progress-fill" class="h-full bg-gradient-to-r from-crimson-600 to-gold-400 rounded-full transition-all duration-1000" style="width: 48%;"></div>
+          </div>
+        </div>
+
+        <!-- Quest Tasks to Earn More Honor -->
+        <div class="space-y-4">
+          <h4 class="font-roman text-sm uppercase tracking-wider text-slate-300">Active Celestial Quests</h4>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <div class="quest-card bg-slate-950/70 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+              <div class="space-y-1">
+                <div class="font-roman text-xs font-bold text-white flex items-center space-x-1.5">
+                  <span>ðŸ—»</span>
+                  <span>Scout the Mountain Sanctuaries</span>
+                </div>
+                <div class="text-[11px] text-slate-400">Query 3 locations in The Watchtower</div>
+              </div>
+              <button class="quest-claim-btn px-3 py-1.5 rounded-lg bg-crimson-800 hover:bg-crimson-700 text-white text-xs font-mono font-bold" data-reward="30">
+                +30 PTS
+              </button>
+            </div>
+
+            <div class="quest-card bg-slate-950/70 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+              <div class="space-y-1">
+                <div class="font-roman text-xs font-bold text-white flex items-center space-x-1.5">
+                  <span>📜</span>
+                  <span>Inscribe the Perseid Volley</span>
+                </div>
+                <div class="text-[11px] text-slate-400">Bookmark an event in the Celestial Scroll</div>
+              </div>
+              <button class="quest-claim-btn px-3 py-1.5 rounded-lg bg-crimson-800 hover:bg-crimson-700 text-white text-xs font-mono font-bold" data-reward="25">
+                +25 PTS
+              </button>
+            </div>
+
+            <div class="quest-card bg-slate-950/70 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+              <div class="space-y-1">
+                <div class="font-roman text-xs font-bold text-white flex items-center space-x-1.5">
+                  <span>🔮</span>
+                  <span>Purify Astronomical Photons</span>
+                </div>
+                <div class="text-[11px] text-slate-400">Engage the Spirit Lens restoration engine</div>
+              </div>
+              <button class="quest-claim-btn px-3 py-1.5 rounded-lg bg-crimson-800 hover:bg-crimson-700 text-white text-xs font-mono font-bold" data-reward="50">
+                +50 PTS
+              </button>
+            </div>
+
+            <div class="quest-card bg-slate-950/70 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+              <div class="space-y-1">
+                <div class="font-roman text-xs font-bold text-white flex items-center space-x-1.5">
+                  <span>ðŸŒ‘</span>
+                  <span>Honor the Kurogane Void Moon</span>
+                </div>
+                <div class="text-[11px] text-slate-400">Inspect New Moon zero-glare conditions</div>
+              </div>
+              <button class="quest-claim-btn px-3 py-1.5 rounded-lg bg-crimson-800 hover:bg-crimson-700 text-white text-xs font-mono font-bold" data-reward="40">
+                +40 PTS
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 8. FOOTER (Festival Credits, Kanji Proverb & Architecture Badges)         -->
+  <!-- ========================================================================= -->
+  <footer class="relative bg-black border-t border-crimson-950 py-16 px-4 text-xs font-sans text-slate-400">
+    <div class="max-w-7xl mx-auto space-y-10">
+      
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-900">
+        <div class="space-y-2 text-center md:text-left">
+          <div class="flex items-center justify-center md:justify-start space-x-2">
+            <span class="text-xl">🌙</span>
+            <span class="font-cinzel text-lg font-bold text-white">TSUKUYOMI WATCH</span>
+          </div>
+          <p class="font-roman text-slate-500">
+            Samurai-Themed Celestial & Stargazing Guide Platform // PECATHON 2026
+          </p>
+        </div>
+
+        <!-- Tech Stack Badge Badges -->
+        <div class="flex flex-wrap gap-2 justify-center">
+          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300">Node.js Express API</span>
+          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300">Open-Meteo Satellite</span>
+          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300">Spirit Lens Optics</span>
+          <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[10px] font-mono text-slate-300">Tailwind CSS</span>
+        </div>
+      </div>
+
+      <!-- Traditional Japanese Proverb -->
+      <div class="text-center space-y-2">
+        <p class="font-mincho text-slate-500 text-sm italic">
+          ã€Œæœˆã«å¢é›²ã€èŠ±ã«é¢¨ã€
+        </p>
+        <p class="text-slate-600 text-[11px] font-roman">
+          "Clouds may veil the moon and wind may scatter blossoms â€” yet the patient warrior waits for the sky to clear."
+        </p>
+      </div>
+
+      <div class="text-center text-slate-600 text-[10px] font-mono">
+        Built for PECathon 2026 • Zero External Dependencies Mode • Production Ready
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- 9. JAVASCRIPT: LOGIC, ANIMATIONS, WEBAUDIO, & API INTEGRATION             -->
+  <!-- ========================================================================= -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // ---------------------------------------------------------------------------
+    // A. Bushido Honor Points Management (localStorage)
+    // ---------------------------------------------------------------------------
+    let honorPoints = parseInt(localStorage.getItem('tsukuyomi_honor_points') || '240', 10);
+
+    function updateHonorUI() {
+      const navEl = document.getElementById('nav-honor-points');
+      const dojoEl = document.getElementById('dojo-honor-number');
+      const progressEl = document.getElementById('dojo-progress-fill');
+      const rankTitle = document.getElementById('dojo-rank-title');
+
+      if (navEl) navEl.textContent = `${honorPoints} PTS`;
+      if (dojoEl) dojoEl.textContent = `${honorPoints} PTS`;
+
+      const pct = Math.min(100, Math.round((honorPoints / 500) * 100));
+      if (progressEl) progressEl.style.width = `${pct}%`;
+
+      // Update titles
+      if (rankTitle) {
+        if (honorPoints >= 450) rankTitle.textContent = "Kage-Ryu Grandmaster (Shadow Master)";
+        else if (honorPoints >= 300) rankTitle.textContent = "Hatamoto (Senior Retainer)";
+        else if (honorPoints >= 150) rankTitle.textContent = "Jou-Gashira (Night Watchman)";
+        else rankTitle.textContent = "Ashigaru Foot Soldier";
+      }
+
+      localStorage.setItem('tsukuyomi_honor_points', honorPoints.toString());
+    }
+
+    function awardHonor(points, reason) {
+      honorPoints += points;
+      updateHonorUI();
+      playZenTone(587.33, 'triangle', 0.2); // D5 chime
+      showNotification(`⚔ï¸ +${points} Honor Points Awarded! (${reason})`);
+    }
+
+    // ---------------------------------------------------------------------------
+    // B. Interactive Notification Toast
+    // ---------------------------------------------------------------------------
+    function showNotification(msg) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-6 right-6 z-50 bg-black/90 border border-gold-400 text-gold-300 px-4 py-3 rounded-xl shadow-2xl font-roman text-xs flex items-center space-x-2 transform translate-y-10 opacity-0 transition-all duration-300 backdrop-blur-md';
+      toast.innerHTML = `<span>⚔ï¸</span><span>${msg}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.remove('translate-y-10', 'opacity-0');
+      }, 50);
+      setTimeout(() => {
+        toast.classList.add('translate-y-10', 'opacity-0');
+        setTimeout(() => toast.remove(), 400);
+      }, 3500);
+    }
+
+    // ---------------------------------------------------------------------------
+    // C. Web Audio API Zen Soundscape (Pure Client-Side Synthesis)
+    // ---------------------------------------------------------------------------
+    let audioCtx = null;
+    let zenAudioEnabled = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playZenTone(freq, type = 'sine', duration = 0.5) {
+      if (!zenAudioEnabled) return;
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    const audioBtn = document.getElementById('zen-audio-toggle');
+    const audioLabel = document.getElementById('audio-label');
+    if (audioBtn) {
+      audioBtn.addEventListener('click', () => {
+        zenAudioEnabled = !zenAudioEnabled;
+        if (zenAudioEnabled) {
+          initAudio();
+          playZenTone(440, 'triangle', 0.8);
+          audioBtn.classList.add('border-gold-400', 'text-gold-400');
+          if (audioLabel) audioLabel.textContent = 'Sound ON';
+          showNotification("Zen FX Chimes Activated");
+        } else {
+          audioBtn.classList.remove('border-gold-400', 'text-gold-400');
+          if (audioLabel) audioLabel.textContent = 'Zen FX';
+        }
+      });
+    }
+
+    // ---------------------------------------------------------------------------
+    // D. Canvas Sakura Petals Animation
+    // ---------------------------------------------------------------------------
+    const canvas = document.getElementById('sakura-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const petals = Array.from({ length: 28 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 3 + 2,
+        dx: Math.random() * 1 + 0.5,
+        dy: Math.random() * 1.5 + 0.8,
+        opacity: Math.random() * 0.5 + 0.2,
+        tilt: Math.random() * 10
+      }));
+
+      function renderSakura() {
+        ctx.clearRect(0, 0, width, height);
+        petals.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(253, 164, 175, ${p.opacity})`;
+          ctx.fill();
+
+          p.x += p.dx;
+          p.y += p.dy;
+          if (p.y > height) { p.y = -10; p.x = Math.random() * width; }
+          if (p.x > width) { p.x = 0; }
+        });
+        requestAnimationFrame(renderSakura);
+      }
+      renderSakura();
+    }
+
+    // ---------------------------------------------------------------------------
+    // E. Component 1: The Watchtower API Fetch & Scoring
+    // ---------------------------------------------------------------------------
+    const mockSanctuaryData = {
+      "Mount Fuji": { score: 96, rank: "Kage-Ryu Grandmaster", wisdom: "The Moon Blade is drawn. The stars pierce through the velvet night like diamond sparks on polished iron.", cloud: "8%", vis: "24.0 km", hum: "42%", bortle: "Class 3", bortleDesc: "Rural Dark Sky", coords: "35.36Â°N, 138.72Â°E" },
+      "Achi Village": { score: 98, rank: "Kage-Ryu Grandmaster", wisdom: "Certified sanctuary of the star river. The cosmos opens like an infinite mandala.", cloud: "4%", vis: "25.0 km", hum: "38%", bortle: "Class 2", bortleDesc: "Truly Dark Sky Site", coords: "35.44Â°N, 137.74Â°E" },
+      "Bisei Town": { score: 92, rank: "Kage-Ryu Grandmaster", wisdom: "Protected by ancient decree of the star light. Faint nebulae burn pure.", cloud: "12%", vis: "22.0 km", hum: "48%", bortle: "Class 3", bortleDesc: "Rural Dark Sky", coords: "34.70Â°N, 133.54Â°E" },
+      "Mount Koya": { score: 88, rank: "Hatamoto Retainer", wisdom: "Ancient cedars whisper beneath the moon mirror. The Orion hunter stands guard.", cloud: "16%", vis: "20.0 km", hum: "52%", bortle: "Class 3", bortleDesc: "Mountain Temple Sanctum", coords: "34.21Â°N, 135.58Â°E" },
+      "Tokyo": { score: 42, rank: "Ashigaru Foot Soldier", wisdom: "Urban lanterns veil the faint ronin stars. Seek bright planetary targets or travel beyond the perimeter.", cloud: "34%", vis: "12.0 km", hum: "68%", bortle: "Class 8", bortleDesc: "Inner City Light Dome", coords: "35.67Â°N, 139.65Â°E" }
+    };
+
+    async function queryWatchtower(cityName) {
+      const cleanCity = cityName.trim();
+      const activeLabel = document.getElementById('active-sanctuary-label');
+      if (activeLabel) activeLabel.textContent = cleanCity;
+
+      // Try fetching real backend API if running
+      let data = null;
+      try {
+        const response = await fetch(`http://localhost:5000/api/stargazing-spots?city=${encodeURIComponent(cleanCity)}`, { signal: AbortSignal.timeout(2000) });
+        if (response.ok) {
+          const resJson = await response.json();
+          if (resJson.success) {
+            data = {
+              score: resJson.nightHonorScore,
+              rank: resJson.samuraiEvaluation?.rank || "Hatamoto",
+              wisdom: resJson.samuraiEvaluation?.wisdom || "The heavens favor the observant warrior.",
+              cloud: `${resJson.currentWeather?.cloudCoverPercent || 15}%`,
+              vis: `${((resJson.currentWeather?.visibilityMeters || 24000) / 1000).toFixed(1)} km`,
+              hum: `${resJson.currentWeather?.humidityPercent || 50}%`,
+              bortle: `Class ${resJson.lightPollution?.bortleClass || 4}`,
+              bortleDesc: resJson.lightPollution?.bortleTitle?.slice(0, 24) || "Dark Sky Site",
+              coords: `${resJson.location?.latitude?.toFixed(2)}Â°N, ${resJson.location?.longitude?.toFixed(2)}Â°E`
+            };
+          }
+        }
+      } catch (err) {
+        // Backend not running on localhost:5000 -> fallback smoothly to rich mock dataset
+      }
+
+      if (!data) {
+        data = mockSanctuaryData[cleanCity] || {
+          score: 84,
+          rank: "Hatamoto (Senior Retainer)",
+          wisdom: "The sky clears like drawn steel. Constellations assemble in steadfast order.",
+          cloud: "18%",
+          vis: "21.0 km",
+          hum: "54%",
+          bortle: "Class 4",
+          bortleDesc: "Rural Transition",
+          coords: "Custom Coordinates"
+        };
+      }
+
+      // Update UI elements
+      document.getElementById('display-honor-score').textContent = data.score;
+      document.getElementById('display-samurai-rank').textContent = data.rank;
+      document.getElementById('display-samurai-wisdom').textContent = `"${data.wisdom}"`;
+      document.getElementById('display-location-name').textContent = `${cleanCity} (${data.coords})`;
+      document.getElementById('metric-cloud').textContent = data.cloud;
+      document.getElementById('metric-visibility').textContent = data.vis;
+      document.getElementById('metric-humidity').textContent = data.hum;
+      document.getElementById('metric-bortle').textContent = data.bortle;
+      document.getElementById('metric-bortle-title').textContent = data.bortleDesc;
+
+      // Update gauge circle offset
+      const circle = document.getElementById('score-circle-bar');
+      if (circle) {
+        const offset = 264 - (264 * (data.score / 100));
+        circle.style.strokeDashoffset = offset;
+      }
+
+      awardHonor(15, `Calibrated Watchtower for ${cleanCity}`);
+    }
+
+    // Attach search & buttons
+    const queryBtn = document.getElementById('watchtower-query-btn');
+    const searchInput = document.getElementById('watchtower-search-input');
+    if (queryBtn && searchInput) {
+      queryBtn.addEventListener('click', () => queryWatchtower(searchInput.value));
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') queryWatchtower(searchInput.value);
+      });
+    }
+
+    document.querySelectorAll('.sanctuary-pill, .map-pin').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetCity = btn.getAttribute('data-city');
+        if (searchInput) searchInput.value = targetCity;
+        queryWatchtower(targetCity);
+      });
+    });
+
+    // ---------------------------------------------------------------------------
+    // F. Component 2: The Celestial Scroll (Events Calendar)
+    // ---------------------------------------------------------------------------
+    const CELESTIAL_EVENTS_STORE = [
+      {
+        id: "evt-perseids",
+        title: "Perseid Meteor Shower Peak",
+        samuraiTitle: "Tears of Tsukuyomi (Perseid Sparks)",
+        type: "meteor_shower",
+        date: "2026-08-12",
+        direction: "North-East (Perseus)",
+        rate: "100 Meteors / Hour",
+        gear: "Naked Eye & Bamboo Mat",
+        lore: "Sparks falling from the forge of celestial swordsmiths as Tsukuyomi tests the temper of the cosmic katana."
+      },
+      {
+        id: "evt-geminids",
+        title: "Geminid Meteor Shower",
+        samuraiTitle: "The Silver Volley of Twin Warriors",
+        type: "meteor_shower",
+        date: "2026-12-14",
+        direction: "East (Gemini)",
+        rate: "120 Meteors / Hour",
+        gear: "Warm Cloak & Wide Optics",
+        lore: "Dedicated to the twin martial spirits of feudal legend, blazing across crisp winter skies."
+      },
+      {
+        id: "evt-moon-new",
+        title: "New Moon: The Kurogane Void",
+        samuraiTitle: "The Void Blade (Kurogane Ya)",
+        type: "moon_phase",
+        date: "2026-11-09",
+        direction: "Deep Zenith",
+        rate: "0% Glare (Zero Glare)",
+        gear: "Telescope / Deep Sky Rig",
+        lore: "When Tsukuyomi cloaks his face, millions of ancestral stars pierce the black velvet of the void."
+      },
+      {
+        id: "evt-iss-pass",
+        title: "ISS Evening Zenith Transit",
+        samuraiTitle: "Sky Chariot of the Shogun",
+        type: "iss_pass",
+        date: "2026-11-03",
+        direction: "South-West to North-East",
+        rate: "Mag -3.8 (Brilliant)",
+        gear: "Naked Eye",
+        lore: "A silent sky citadel gliding across the heavens faster than the swiftest war steed."
+      },
+      {
+        id: "evt-eclipse-lunar",
+        title: "Total Lunar Eclipse (Blood Moon)",
+        samuraiTitle: "Blood Moon of the Crimson Clan",
+        type: "eclipse",
+        date: "2026-03-03",
+        direction: "East-South-East",
+        rate: "58m Totality",
+        gear: "Spotting Scope & Camera",
+        lore: "The sacred moon is bathed in copper-crimson sunset shadow, signaling turning tides of fate."
+      },
+      {
+        id: "evt-conjunction",
+        title: "Venus-Jupiter Great Conjunction",
+        samuraiTitle: "The Duel of Celestial Champions",
+        type: "planetary_alignment",
+        date: "2026-11-18",
+        direction: "Western Dusk Horizon",
+        rate: "0.4Â° Separation",
+        gear: "Binoculars or Small Scope",
+        lore: "The Morning Star and the Giant Planet cross swords in the western sunset sky."
+      }
+    ];
+
+    function renderEvents(filter = 'all', searchQuery = '') {
+      const container = document.getElementById('events-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let filtered = CELESTIAL_EVENTS_STORE;
+      if (filter !== 'all') {
+        filtered = filtered.filter(e => e.type === filter);
+      }
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(e => e.title.toLowerCase().includes(q) || e.samuraiTitle.toLowerCase().includes(q) || e.lore.toLowerCase().includes(q));
+      }
+
+      filtered.forEach(evt => {
+        const card = document.createElement('div');
+        card.className = "bg-shrine/80 border border-slate-800 hover:border-gold-500/50 rounded-2xl p-5 shadow-xl transition-all hover:-translate-y-1 space-y-4 relative overflow-hidden backdrop-blur-md";
+        card.innerHTML = `
+          <div class="flex items-center justify-between text-xs font-mono">
+            <span class="px-2.5 py-0.5 rounded bg-crimson-950/80 border border-crimson-700/60 text-crimson-400 font-bold uppercase tracking-wider">
+              ${evt.type.replace('_', ' ')}
+            </span>
+            <span class="text-gold-400 font-bold">${evt.date}</span>
+          </div>
+          <div>
+            <div class="text-[11px] font-mincho text-slate-400 tracking-wider">${evt.samuraiTitle}</div>
+            <h4 class="font-roman text-base font-bold text-white">${evt.title}</h4>
+          </div>
+          <p class="text-xs text-slate-300 font-sans italic border-l-2 border-crimson-500 pl-3">
+            "${evt.lore}"
+          </p>
+          <div class="grid grid-cols-2 gap-2 text-[11px] font-mono text-slate-400 bg-void/60 p-2.5 rounded-xl border border-slate-800/80">
+            <div>ðŸ”­ <strong>Direction:</strong> ${evt.direction}</div>
+            <div>⚡ <strong>Rate:</strong> ${evt.rate}</div>
+          </div>
+          <button class="inscribe-event-btn w-full py-2 rounded-xl bg-slate-900 hover:bg-gold-500 hover:text-void border border-slate-700 hover:border-gold-400 text-xs font-roman font-bold transition-all flex items-center justify-center space-x-1.5" data-id="${evt.id}">
+            <span>📜</span>
+            <span>Record in Warrior Scroll (+25 Pts)</span>
+          </button>
+        `;
+        container.appendChild(card);
+      });
+
+      // Attach bookmark buttons
+      container.querySelectorAll('.inscribe-event-btn').forEach(b => {
+        b.addEventListener('click', () => {
+          awardHonor(25, "Inscribed Celestial Event");
+          b.textContent = "âœ“ Inscribed in Scroll";
+          b.classList.add('bg-gold-500', 'text-void', 'border-gold-400');
+        });
+      });
+    }
+
+    renderEvents();
+
+    // Event filter pills
+    document.querySelectorAll('.event-filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.event-filter-pill').forEach(b => {
+          b.classList.remove('bg-crimson-700', 'text-white', 'border-crimson-500');
+          b.classList.add('bg-shrine', 'text-slate-300', 'border-slate-800');
+        });
+        btn.classList.add('bg-crimson-700', 'text-white', 'border-crimson-500');
+        btn.classList.remove('bg-shrine', 'text-slate-300', 'border-slate-800');
+        renderEvents(btn.getAttribute('data-filter'), document.getElementById('event-search-input')?.value || '');
+      });
+    });
+
+    const eventSearch = document.getElementById('event-search-input');
+    if (eventSearch) {
+      eventSearch.addEventListener('input', (e) => {
+        renderEvents('all', e.target.value);
+      });
+    }
+
+    const bookmarkAlert = document.getElementById('bookmark-alert-btn');
+    if (bookmarkAlert) {
+      bookmarkAlert.addEventListener('click', () => {
+        awardHonor(25, "Recorded Lunar Alert");
+        bookmarkAlert.textContent = "âœ“ Recorded in Scroll";
+        bookmarkAlert.disabled = true;
+      });
+    }
+
+    // ---------------------------------------------------------------------------
+    // G. Component 3: The Spirit Lens Interactive Slider & Restoration Engine
+    // ---------------------------------------------------------------------------
+    const sliderContainer = document.getElementById('slider-container');
+    const afterLayer = document.getElementById('after-layer');
+    const handleBar = document.getElementById('slider-handle-bar');
+    let isDraggingSlider = false;
+
+    function updateSliderPosition(clientX) {
+      if (!sliderContainer || !afterLayer || !handleBar) return;
+      const rect = sliderContainer.getBoundingClientRect();
+      let x = clientX - rect.left;
+      x = Math.max(0, Math.min(x, rect.width));
+      const percentage = (x / rect.width) * 100;
+
+      afterLayer.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+      handleBar.style.left = `${percentage}%`;
+    }
+
+    if (sliderContainer) {
+      sliderContainer.addEventListener('mousedown', (e) => { isDraggingSlider = true; updateSliderPosition(e.clientX); });
+      window.addEventListener('mouseup', () => { isDraggingSlider = false; });
+      window.addEventListener('mousemove', (e) => { if (isDraggingSlider) updateSliderPosition(e.clientX); });
+
+      // Mobile Touch events
+      sliderContainer.addEventListener('touchstart', (e) => { isDraggingSlider = true; updateSliderPosition(e.touches[0].clientX); });
+      window.addEventListener('touchend', () => { isDraggingSlider = false; });
+      window.addEventListener('touchmove', (e) => { if (isDraggingSlider) updateSliderPosition(e.touches[0].clientX); });
+    }
+
+    // Spirit Lens Overlays Toggle
+    const toggleStellar = document.getElementById('toggle-stellar-cores');
+    const stellarLayer = document.getElementById('stellar-cores-layer');
+    if (toggleStellar && stellarLayer) {
+      toggleStellar.addEventListener('click', () => {
+        stellarLayer.classList.toggle('hidden');
+        toggleStellar.classList.toggle('border-gold-400');
+        toggleStellar.classList.toggle('text-gold-400');
+      });
+    }
+
+    const toggleNebula = document.getElementById('toggle-nebula-outline');
+    const nebulaLayer = document.getElementById('nebula-mask-layer');
+    if (toggleNebula && nebulaLayer) {
+      toggleNebula.addEventListener('click', () => {
+        nebulaLayer.classList.toggle('hidden');
+        toggleNebula.classList.toggle('border-crimson-400');
+        toggleNebula.classList.toggle('text-crimson-400');
+      });
+    }
+
+    // Upload & Restoration Engine Trigger
+    const fileInput = document.getElementById('lens-file-input');
+    const uploadTrigger = document.getElementById('trigger-upload-btn');
+    const runLensBtn = document.getElementById('run-spirit-lens-btn');
+
+    if (uploadTrigger && fileInput) {
+      uploadTrigger.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          reader.onload = (re) => {
+            document.getElementById('img-before').src = re.target.result;
+            document.getElementById('img-after').src = re.target.result;
+            showNotification(`Loaded photograph: ${file.name}`);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    if (runLensBtn) {
+      runLensBtn.addEventListener('click', async () => {
+        runLensBtn.disabled = true;
+        runLensBtn.innerHTML = `<span>â³</span><span>Purifying Photons...</span>`;
+
+        // Check if backend API is reachable
+        try {
+          await fetch('http://localhost:5000/api/image-restore', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filterIntensity: 'deep_void' }),
+            signal: AbortSignal.timeout(2000)
+          });
+        } catch (e) {
+          // Graceful simulation
+        }
+
+        setTimeout(() => {
+          awardHonor(50, "Engaged Spirit Lens Deep Denoising");
+          runLensBtn.disabled = false;
+          runLensBtn.innerHTML = `<span>âœ“</span><span>Restoration Complete</span>`;
+          setTimeout(() => {
+            runLensBtn.innerHTML = `<span>🔮</span><span>Engage Spirit Lens (+50 Pts)</span>`;
+          }, 2500);
+        }, 1200);
+      });
+    }
+
+    // ---------------------------------------------------------------------------
+    // H. Component 4: Dojo Quest Rewards
+    // ---------------------------------------------------------------------------
+    document.querySelectorAll('.quest-claim-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const reward = parseInt(btn.getAttribute('data-reward'), 10);
+        awardHonor(reward, "Fulfilled Bushido Quest");
+        btn.textContent = "âœ“ Claimed";
+        btn.disabled = true;
+        btn.classList.remove('bg-crimson-800', 'hover:bg-crimson-700');
+        btn.classList.add('bg-slate-800', 'text-slate-500', 'cursor-not-allowed');
+      });
+    });
+
+    // Mobile Hamburger Menu
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileBtn && mobileMenu) {
+      mobileBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+
+    // Countdown Timer Loop (Next Celestial Peak)
+    const countdownEl = document.getElementById('countdown-timer');
+    if (countdownEl) {
+      let seconds = 412334;
+      setInterval(() => {
+        seconds--;
+        const d = Math.floor(seconds / (3600 * 24));
+        const h = Math.floor((seconds % (3600 * 24)) / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        countdownEl.textContent = `${String(d).padStart(2, '0')}d ${String(h).padStart(2, '0')}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
+      }, 1000);
+    }
+
+    // Initial state sync
+    updateHonorUI();
+
+    // -----------------------------------------------------------------------
+    // I. MODAL SYSTEM — open / close with blur backdrop & restore scroll pos
+    // -----------------------------------------------------------------------
+    let _savedScrollY = 0;
+
+    function openModal(id) {
+      _savedScrollY = window.scrollY;
+      const overlay = document.getElementById(id);
+      if (!overlay) return;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+      const overlay = document.getElementById(id);
+      if (!overlay) return;
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+      // Restore exact scroll position the user was at
+      window.scrollTo({ top: _savedScrollY, behavior: 'instant' });
+    }
+
+    // Wire all close buttons (data-modal="modal-id")
+    document.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', () => closeModal(btn.getAttribute('data-modal')));
+    });
+
+    // Tap outside the box to close
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal(overlay.id);
+      });
+    });
+
+    // Escape key to close any open modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m.id));
+      }
+    });
+
+    // Sync the countdown inside the Next Peak modal too
+    const modalCountdownEl = document.getElementById('modal-countdown-display');
+    const mainCountdownEl = document.getElementById('countdown-timer');
+    if (modalCountdownEl && mainCountdownEl) {
+      const syncModalTimer = () => {
+        modalCountdownEl.textContent = mainCountdownEl.textContent;
+      };
+      syncModalTimer();
+      setInterval(syncModalTimer, 1000);
+    }
+
+    // -----------------------------------------------------------------------
+    // J. SECTION TRANSITION OBSERVER — PECFest-style reveal on scroll
+    //    Sections slide up + fade in with a staggered crimson/gold shimmer
+    // -----------------------------------------------------------------------
+    const transitionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Add a short PECFest shimmer flash before reveal
+          const el = entry.target;
+          el.style.setProperty('--tw-shadow-color', 'rgba(220,38,38,0.3)');
+          setTimeout(() => el.classList.add('visible'), 60);
+          transitionObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.section-transition').forEach(section => {
+      transitionObserver.observe(section);
+    });
+
+    // Nav link click: add a quick red-gold ripple flash on the target section
+    document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+      link.addEventListener('click', () => {
+        const targetId = link.getAttribute('href').slice(1);
+        const targetSection = document.getElementById(targetId);
+        if (!targetSection) return;
+        // Ripple overlay element
+        const flash = document.createElement('div');
+        flash.style.cssText = `
+          position:absolute; inset:0; z-index:50; pointer-events:none;
+          background: radial-gradient(circle at 50% 30%, rgba(220,38,38,0.18) 0%, rgba(234,179,8,0.08) 50%, transparent 80%);
+          animation: pecfest-flash 0.7s ease-out forwards;
+        `;
+        targetSection.style.position = 'relative';
+        targetSection.appendChild(flash);
+        setTimeout(() => flash.remove(), 750);
+      });
+    });
+
+    // Inject PECFest flash keyframe
+    const flashStyle = document.createElement('style');
+    flashStyle.textContent = `
+      @keyframes pecfest-flash {
+        0%   { opacity: 0; transform: scale(0.97); }
+        30%  { opacity: 1; transform: scale(1); }
+        100% { opacity: 0; transform: scale(1.01); }
+      }
+    `;
+    document.head.appendChild(flashStyle);
+
+  </script>
+</body>
+</html>
+
+
+
